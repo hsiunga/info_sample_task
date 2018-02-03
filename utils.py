@@ -10,7 +10,7 @@ def cross_call_replacement(func):
 
     def inn(l, num, replace=True):
         if not replace:
-            pass_list = list_diff_w_dups(l, already_pulled)
+            pass_list = __list_diff_w_dups(l, already_pulled)
             if len(pass_list) < num:
                 raise Exception('not enough remaining unique items to return a list of items that haven\'t been used already')
             rlist = func(pass_list, num, False)
@@ -21,7 +21,7 @@ def cross_call_replacement(func):
     return inn
 
 
-def list_diff_w_dups(list1, list2):
+def __list_diff_w_dups(list1, list2):
     count = Counter(list1)
     count.subtract(list2)
     return list(count.elements())
@@ -29,5 +29,4 @@ def list_diff_w_dups(list1, list2):
 
 @cross_call_replacement
 def list_sample(l, num, replace=True):
-    print('remaining list {}'.format(l))
     return list(numpy.random.choice(l,num,replace))
