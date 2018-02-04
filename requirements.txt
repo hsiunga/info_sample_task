@@ -54,3 +54,4 @@ tqdm==4.11.2
 urllib3==1.22
 wxPython==4.0.1
 xlrd==1.1.0
+git+https://github.com/cravatsc/config_management.git
