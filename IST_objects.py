@@ -13,8 +13,9 @@ class Participant():
 
 class ConfidenceTrial():
 
-    def __init__(self, trial_no, picture_path, status, confidence):
+    def __init__(self, trial_no, global_time, picture_path, status, confidence):
         self.trial_no = trial_no
+        self.global_time = global_time
         self.picture_path = picture_path
         self.status_input = status
         self.confidence_input = confidence
@@ -48,5 +49,5 @@ class ConfidenceTrial():
             self.conf_time = 'No Time'
 
     def csv_format(self):
-        return '{}, {}, {}, {}, {}, {}'.format(self.trial_no, self.picture_name,
+        return '{}, {}, {}, {}, {}, {}, {}'.format(self.trial_no, self.global_time, self.picture_name,
                                                self.status, self.status_time, self.confidence, self.conf_time)

@@ -25,13 +25,14 @@ def main():
     participant = IST_objects.Participant(participant_no, session_no)
 
     # set up logging information
-    globalClock = core.Clock()  # if this isn't provided the log times will reflect secs since python started
+    globalClock = core.MonotonicClock()  # if this isn't provided the log times will reflect secs since python started
+    trial_clock = core.Clock()
     logging.setDefaultClock(globalClock)
     # set up file creation
     filename = config.config.get('log_location') + os.sep + '{}_{}_{}_IST_memory'.format(participant.id, participant.session,data.getDateStr()) + '.csv'
     file_writer = open(filename, 'a')
     file_writer.write(
-        'participant_id, session, trial_number, picture, old/new, time_of_choice, confidence, time_con_rating,\n')
+        'participant_id, session, trial_number, global_time, picture, old/new, time_of_choice, confidence, time_con_rating,\n')
 
     endExpNow = False
 
@@ -43,7 +44,7 @@ def main():
     # set up directions
     old_new = visual.TextStim(win, text=u"Old/New", pos=(0, -0.77), bold=True)
     confidence_rating = visual.TextStim(win, text=u"1   2   3", pos=(0, 0), height=0.3, bold=True)
-    confidence_text = visual.TextStim(win, text=u"low                    high", pos=(0, -0.3), height=0.1, bold=True)
+    confidence_text = visual.TextStim(win, text=u"low                     high", pos=(0, -0.3), height=0.1, bold=True)
 
     # collect all images
     all_indoor_imgs = load_images(config.config.get('indoor_image_path'))
@@ -56,7 +57,7 @@ def main():
     # shuffle and randomize all images
     random.shuffle(total_images)
 
-    num_of_images = 3 #len(total_images)
+    num_of_images = 8 #len(total_images)
 
 
     for x in range(num_of_images):
@@ -65,13 +66,15 @@ def main():
         visual_select.draw()
         old_new.draw()
         win.flip()
-        status_in = event.waitKeys(maxWait=10, keyList=['left','right'], modifiers=False, timeStamped=globalClock)
+        trial_clock.reset(0)
+        status_in = event.waitKeys(maxWait=10, keyList=['left','right'], modifiers=False, timeStamped=trial_clock)
         confidence_rating.draw()
         confidence_text.draw()
         win.flip()
-        conf_in = event.waitKeys(maxWait=10, keyList=['left','down','right'], modifiers=False, timeStamped=globalClock)
+        trial_clock.reset(0)
+        conf_in = event.waitKeys(maxWait=10, keyList=['left','down','right'], modifiers=False, timeStamped=trial_clock)
         core.wait(0.5)
-        trial = IST_objects.ConfidenceTrial(x+1, pic, status_in, conf_in)
+        trial = IST_objects.ConfidenceTrial(x+1, globalClock.getTime(), pic, status_in, conf_in)
         file_writer.write(participant.csv_format() + trial.csv_format()+'\n')
 
     print'!!!!!!!!!!!!!!!!!!!!!!!!!'
