@@ -1,0 +1,6 @@
+indoor_image_path=/absolute/path/for/images
+outdoor_image_path=/absolute/path/for/images
+living_image_path=/absolute/path/for/images
+non_living_image_path=/absolute/path/for/images
+image_file_ext=.jpeg
+log_location=/absolute/path/for/log
