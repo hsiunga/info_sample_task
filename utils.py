@@ -8,8 +8,11 @@ def cross_call_replacement(func):
     and these won't be passed through to the sampling functionality on subsequent calls."""
     already_pulled = []
 
-    def inn(l, num, replace=True):
+    def inn(l, num, replace=True, unused=None):
         if not replace:
+            if unused:
+                for unused_value in unused:
+                    already_pulled.remove(unused_value)
             pass_list = __list_diff_w_dups(l, already_pulled)
             if len(pass_list) < num:
                 raise Exception('not enough remaining unique items to return a list of items that haven\'t been used already')
