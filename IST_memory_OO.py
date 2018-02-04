@@ -3,21 +3,11 @@ from psychopy import visual, data, logging, event, core
 from numpy import random
 from config_management import config_manager
 import IST_objects
-
-
-config = config_manager.ConfigManager('IST_memory.config')
-
-
-def load_images(path):
-    ret_list = []
-    img_list = os.listdir(path)
-    for image in img_list:
-        if image.endswith(config.config.get('image_file_ext')):
-            ret_list.append(path + os.sep + image)
-    return ret_list
+from utils import load_files_by_ext
 
 
 def main():
+    config = config_manager.ConfigManager('IST_memory.config')
     # Store info about the experiment session
     participant_no = raw_input('Participant Number:')
     session_no = raw_input('Session Number:')
@@ -47,10 +37,10 @@ def main():
     confidence_text = visual.TextStim(win, text=u"low                     high", pos=(0, -0.3), height=0.1, bold=True)
 
     # collect all images
-    all_indoor_imgs = load_images(config.config.get('indoor_image_path'))
-    all_outdoor_imgs = load_images(config.config.get('outdoor_image_path'))
-    all_living_imgs = load_images(config.config.get('living_image_path'))
-    all_nonliving_imgs = load_images(config.config.get('non_living_image_path'))
+    all_indoor_imgs = load_files_by_ext(config.config.get('indoor_image_path'), config.config.get('image_file_ext'))
+    all_outdoor_imgs = load_files_by_ext(config.config.get('outdoor_image_path'), config.config.get('image_file_ext'))
+    all_living_imgs = load_files_by_ext(config.config.get('living_image_path'), config.config.get('image_file_ext'))
+    all_nonliving_imgs = load_files_by_ext(config.config.get('non_living_image_path'), config.config.get('image_file_ext'))
 
     total_images = all_indoor_imgs + all_outdoor_imgs + all_living_imgs + all_nonliving_imgs
 
@@ -58,7 +48,6 @@ def main():
     random.shuffle(total_images)
 
     num_of_images = 8 #len(total_images)
-
 
     for x in range(num_of_images):
         pic = total_images[x]

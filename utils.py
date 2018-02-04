@@ -1,5 +1,6 @@
 from collections import Counter
 import numpy
+import os
 
 
 def cross_call_replacement(func):
@@ -33,3 +34,12 @@ def __list_diff_w_dups(list1, list2):
 @cross_call_replacement
 def list_sample(l, num, replace=True):
     return list(numpy.random.choice(l,num,replace))
+
+
+def load_files_by_ext(path, ext):
+    ret_list = []
+    img_list = os.listdir(path)
+    for image in img_list:
+        if image.endswith(ext):
+            ret_list.append(path + os.sep + image)
+    return ret_list
