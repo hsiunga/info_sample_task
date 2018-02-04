@@ -48,13 +48,13 @@ def main():
     # collect all images
     all_indoor_imgs = load_images(config.config.get('indoor_image_path'))
     all_outdoor_imgs = load_images(config.config.get('outdoor_image_path'))
-    # all_living_imgs = load_images(config.config.get('living_image_path'))
-    # all_nonliving_imgs = load_images(config.config.get('non_living_image_path'))
+    all_living_imgs = load_images(config.config.get('living_image_path'))
+    all_nonliving_imgs = load_images(config.config.get('non_living_image_path'))
 
-    total_images = all_indoor_imgs + all_outdoor_imgs #+ all_living_imgs + all_nonliving_imgs
+    total_images = all_indoor_imgs + all_outdoor_imgs + all_living_imgs + all_nonliving_imgs
 
     # shuffle and randomize all images
-    random_total_images = random.shuffle(total_images)
+    random.shuffle(total_images)
 
     num_of_images = 3 #len(total_images)
 
