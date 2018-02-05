@@ -1,4 +1,5 @@
 import os
+from trial_types import minority_category
 
 
 class Participant():
@@ -9,6 +10,56 @@ class Participant():
 
     def csv_format(self):
         return '{}, {},'.format(self.id, self.session)
+
+
+class SamplesInTrial():
+
+    def __init__(self, sample_no, picture_path, dec_to_sample_time, global_picture_onset):
+        self.sample_no = sample_no
+        self.dec_to_sample_time = dec_to_sample_time
+        self.global_picture_onset = global_picture_onset
+        self.picture_path = picture_path
+        self.picture_name = self.picture_path.split(os.sep)[-1]
+        self.image_type = self.picture_name.split('_')[0]
+        self.image_judgement = None
+        self.time_of_judge = None
+        self.global_time_of_judgment = None
+
+
+    def csv_format(self):
+        return '{}, {}, {}, {}, {}'.format(self.sample_no, self.dec_to_sample_time, self.picture_name, self.global_picture_onset,
+                                                   self.image_judgement, self.time_of_judge)
+
+class OverallTrial():
+
+    def __init__(self, trial_no, global_time, category_of_pics, probability, reward_type, majority_cat):
+        self.trial_no = trial_no
+        self.global_time = global_time
+        self.category_type = category_of_pics
+        self.prob_dist = probability
+        self.reward_type = reward_type
+        self.majority_cat = majority_cat
+        self.final_choice = None #indoor, outdoor, living, non
+        self.final_choice_time = None
+        self.global_final_choice_time = None
+        self.samples = []
+        self.majority_side = None
+        self.num_of_pics_sampled = 0
+        self.total_trial_time = None
+
+    def csv_format(self):
+        return '{}, {}, {}, {}, {}, {}, {}'.format(self.trial_no, self.global_time, self.category_type,
+                                               self.prob_dist, self.reward_type, self.majority_cat, self.final_choice)
+
+    def add_sample(self, sample):
+        self.samples.append(sample)
+        self.num_of_pics_sampled = len(self.samples)
+
+    def set_final_choice(self, final_dir):
+        if self.majority_side == final_dir:
+            self.final_choice = self.majority_cat
+        else:
+            self.final_choice = minority_category[self.majority_cat]
 
 
 class ConfidenceTrial():
