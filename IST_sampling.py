@@ -138,7 +138,7 @@ def main():
 
     #number of trials (must divide by 16 evenly)
     total_num_trials = 16
-    pic_per_trial = 20
+    pic_per_trial = 2
 
     trial_types_idx = [(x%16)+1 for x in range(total_num_trials)]
     random.shuffle(trial_types_idx)
@@ -164,6 +164,7 @@ def main():
             sample_clock.reset(0)
             choice_to_sample = event.waitKeys(maxWait=10, keyList=['left', 'down', 'right'], modifiers=False,
                                      timeStamped=sample_clock)
+            #TODO add func if choice_to_sample is None
             if 'down' in choice_to_sample[0]:
                 #allocate all sample data
                 sample = IST_objects.SamplesInTrial(idx+1, sample_pic, sample_clock.getTime(), globalClock.getTime())
@@ -206,36 +207,14 @@ def main():
         for unused_pic in trial_pics[next_unseen_pic:]:
             return_unused_pic(unused_pic)
         sample_screen(win, [blank_fixation], 1.5)
-        #TODO write trial data to csv
-
+        for samp in trial_object.samples:
+            file_writer.write(participant.csv_format() + trial_object.csv_format() + samp.csv_format() + '\n')
     file_writer.flush()
     file_writer.close()
 
 def test():
-    # Store info about the experiment session
-    participant_no = raw_input('Participant Number:')
-    session_no = raw_input('Session Number:')
-    raw_input('Press enter when you are ready to start the task.')
-    participant = IST_objects.Participant(participant_no, session_no)
-
-    # set up logging information
-    globalClock = core.MonotonicClock()  # if this isn't provided the log times will reflect secs since python started
-    trial_clock = core.Clock()
-    sample_clock = core.Clock()
-    logging.setDefaultClock(globalClock)
-
-    # set up file creation
-    filename = config.config.get('log_location') + os.sep + '{}_{}_{}_IST_sampling'.format(participant.id,
-                                                                                           participant.session,
-                                                                                           data.getDateStr()) + '.csv'
-    file_writer = open(filename, 'a')
-    file_writer.write('participant_id, session, trial_no, global_time, category_of_pics, probability, reward_type, '
-                      'majority_cat, final_choice, final_choice_time, global_final_choice_time, num_of_samples, '
-                      'total_trial_time, sample_no, picture_path, dec_to_sample_time, global_picture_onset, '
-                      'image_judgement, time_of_judge, global_time_of_judge, \n')
-    file_writer.flush()
-    file_writer.close()
+    pass
 
 if __name__ == '__main__':
-    #main()
-    test()
+    main()
+    #test()

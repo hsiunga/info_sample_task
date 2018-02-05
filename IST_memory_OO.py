@@ -19,7 +19,7 @@ def main():
     trial_clock = core.Clock()
     logging.setDefaultClock(globalClock)
     # set up file creation
-    filename = config.config.get('log_location') + os.sep + '{}_{}_{}_IST_memory'.format(participant.id, participant.session,data.getDateStr()) + '.csv'
+    filename = config.get('log_location') + os.sep + '{}_{}_{}_IST_memory'.format(participant.id, participant.session,data.getDateStr()) + '.csv'
     file_writer = open(filename, 'a')
     file_writer.write(
         'participant_id, session, trial_number, global_time, picture, old/new, time_of_choice, confidence, time_con_rating,\n')
@@ -37,10 +37,10 @@ def main():
     confidence_text = visual.TextStim(win, text=u"low                     high", pos=(0, -0.3), height=0.1, bold=True)
 
     # collect all images
-    all_indoor_imgs = load_files_by_ext(config.config.get('indoor_image_path'), config.config.get('image_file_ext'))
-    all_outdoor_imgs = load_files_by_ext(config.config.get('outdoor_image_path'), config.config.get('image_file_ext'))
-    all_living_imgs = load_files_by_ext(config.config.get('living_image_path'), config.config.get('image_file_ext'))
-    all_nonliving_imgs = load_files_by_ext(config.config.get('non_living_image_path'), config.config.get('image_file_ext'))
+    all_indoor_imgs = load_files_by_ext(config.get('indoor_image_path'), config.get('image_file_ext'))
+    all_outdoor_imgs = load_files_by_ext(config.get('outdoor_image_path'), config.get('image_file_ext'))
+    all_living_imgs = load_files_by_ext(config.get('living_image_path'), config.get('image_file_ext'))
+    all_nonliving_imgs = load_files_by_ext(config.get('non_living_image_path'), config.get('image_file_ext'))
 
     total_images = all_indoor_imgs + all_outdoor_imgs + all_living_imgs + all_nonliving_imgs
 

@@ -9,7 +9,7 @@ class Participant():
         self.session = sesh
 
     def csv_format(self):
-        return '{}, {},'.format(self.id, self.session)
+        return '{}, {}, '.format(self.id, self.session)
 
 
 class SamplesInTrial():
@@ -25,10 +25,10 @@ class SamplesInTrial():
         self.time_of_judge = None
         self.global_time_of_judgment = None
 
-
     def csv_format(self):
-        return '{}, {}, {}, {}, {}'.format(self.sample_no, self.dec_to_sample_time, self.picture_name, self.global_picture_onset,
-                                                   self.image_judgement, self.time_of_judge)
+        return '{}, {}, {}, {}, {}, {}, {}'.format(self.sample_no, self.picture_name, self.dec_to_sample_time,
+                                           self.global_picture_onset, self.image_judgement, self.time_of_judge,
+                                           self.global_time_of_judgment)
 
 class OverallTrial():
 
@@ -48,8 +48,10 @@ class OverallTrial():
         self.total_trial_time = None
 
     def csv_format(self):
-        return '{}, {}, {}, {}, {}, {}, {}'.format(self.trial_no, self.global_time, self.category_type,
-                                               self.prob_dist, self.reward_type, self.majority_cat, self.final_choice)
+        return '{}, {}, {}, {}, {}, {}, {}, {}, {}, {}, {}, '.format(self.trial_no, self.global_time, self.category_type,
+                                               self.prob_dist, self.reward_type, self.majority_cat, self.final_choice,
+                                                           self.final_choice_time, self.num_of_pics_sampled,
+                                                                 self.global_final_choice_time, self.total_trial_time)
 
     def add_sample(self, sample):
         self.samples.append(sample)
