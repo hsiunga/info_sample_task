@@ -5,7 +5,7 @@ majority_cat = 'majority_cat'
 
 indoor_outdoor_cat = 'ioc'
 living_nonliving_cat = 'lnc'
-easy_dist = 0.70
+easy_dist = 0.60
 hard_dist = 0.60
 high_reward = 5
 low_reward = 1

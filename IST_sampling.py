@@ -128,10 +128,11 @@ def main():
                                                                                            participant.session,
                                                                                            data.getDateStr()) + '.csv'
     file_writer = open(filename, 'a')
-    file_writer.write('participant_id, session, trial_no, global_time, category_of_pics, probability, reward_type, '
-                      'majority_cat, final_choice, final_choice_time, num_of_samples, global_final_choice_time, '
-                      'total_trial_time, sample_no, picture_path, dec_to_sample_time, global_picture_onset, '
-                      'image_judgement, time_of_judge, global_time_of_judge, \n')
+    file_writer.write(
+        'participant_id, session, trial_no, global_time_onset_trial, category_of_pics, probability, reward_type, '
+        'majority_cat, final_choice, final_choice_time, num_of_samples, global_final_choice_time, '
+        'total_trial_time, sample_no, picture_path, dec_to_sample_time, global_picture_onset, '
+        'image_judgement, time_of_judge, global_time_of_judge, \n')
 
     # set up display
     win = visual.Window(size=(1440, 900), fullscr=True, screen=0,
@@ -149,8 +150,8 @@ def main():
     blank_fixation = visual.TextStim(win, text='+', color=u'white')
 
     # number of trials (must divide by 16 evenly)
-    total_num_trials = 16
-    pic_per_trial = 10
+    total_num_trials = 48  # --------TRIAL NUMBER ADJUSTMENTS HERE------------
+    pic_per_trial = 20
 
     trial_types_idx = [(x % 16) + 1 for x in range(total_num_trials)]
     random.shuffle(trial_types_idx)
@@ -166,7 +167,7 @@ def main():
 
         # beginning trial from user's perspective
         trial_clock.reset()
-        start_screen(win, trial_data.get('category_of_pic'), trial_data.get('reward_type'), wait=2)
+        start_screen(win, trial_data.get('category_of_pic'), trial_data.get('reward_type'), wait=2.5)
         sample_button, maj_button, min_button, trial_object.majority_side = create_trial_buttons(win,
                                                                                                  trial_object.majority_cat)
         next_unseen_pic = 0
@@ -177,7 +178,16 @@ def main():
             choice_to_sample = event.waitKeys(maxWait=10, keyList=['left', 'down', 'right'], modifiers=False,
                                               timeStamped=sample_clock)
 
-            if 'down' in choice_to_sample[0]:
+            if choice_to_sample is None:
+                feedback = [feedback_negative]
+                sample_screen(win, feedback, 1.5)
+                trial_object.set_final_choice('No Choice')
+                trial_object.final_choice_time = 'No Time'
+                trial_object.global_final_choice_time = globalClock.getTime()
+                trial_object.total_trial_time = trial_clock.getTime()
+                next_unseen_pic = idx
+                break
+            elif 'down' in choice_to_sample[0]:
                 # allocate all sample data
                 sample = IST_objects.SamplesInTrial(idx + 1, sample_pic, sample_clock.getTime(), globalClock.getTime())
                 visual_select = visual.ImageStim(win, image=sample_pic)
@@ -188,7 +198,7 @@ def main():
                     sample_screen(win, [visual_select, maj_button, min_button, judge_ioc])
                 else:
                     sample_screen(win, [visual_select, maj_button, min_button, judge_lnc])
-                image_judgement = event.waitKeys(maxWait=8, keyList=['left', 'right'], modifiers=False,
+                image_judgement = event.waitKeys(maxWait=5, keyList=['left', 'right'], modifiers=False,
                                                  timeStamped=sample_clock)
                 if image_judgement:
                     sample.image_judgement = image_judgement[0][0]
@@ -198,6 +208,8 @@ def main():
                     sample.time_of_judge = 'No Time'
                 sample.global_time_of_judgment = globalClock.getTime()
                 trial_object.add_sample(sample)
+                core.wait(0.25)
+                sample_screen(win, [blank_fixation], 1.5)
             else:
                 if 'left' in choice_to_sample[0]:
                     if trial_object.majority_side == 'left':
@@ -219,7 +231,7 @@ def main():
         for unused_pic in trial_pics[next_unseen_pic:]:
             return_unused_pic(unused_pic)
         sample_screen(win, [blank_fixation], 1.5)
-        if trial_object.num_of_pics_sampled == 0:
+        if trial_object.num_of_pics_sampled == 0 or choice_to_sample is None:
             file_writer.write(participant.csv_format() + trial_object.csv_format() + '\n')
         else:
             for samp in trial_object.samples:

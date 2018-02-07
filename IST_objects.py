@@ -17,7 +17,6 @@ class SamplesInTrial():
     def __init__(self, sample_no, picture_path, dec_to_sample_time, global_picture_onset):
         self.sample_no = sample_no
         self.dec_to_sample_time = dec_to_sample_time
-        assert isinstance(global_picture_onset, object)
         self.global_picture_onset = global_picture_onset
         self.picture_path = picture_path
         self.picture_name = self.picture_path.split(os.sep)[-1]
