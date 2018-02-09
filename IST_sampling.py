@@ -19,8 +19,11 @@ indoor_button_img = config.get('indoor_button_path')
 outdoor_button_img = config.get('outdoor_button_path')
 living_button_img = config.get('living_button_path')
 nonliving_button_img = config.get('nonliving_button_path')
-ioc_judgement_button_img = config.get('ioc_judgement_button_path')
-lnc_judgement_button_img = config.get('lnc_judgement_button_path')
+judgement_button_img = config.get('judgement_button_path')
+
+
+# ioc_judgement_button_img = config.get('ioc_judgement_button_path')
+# lnc_judgement_button_img = config.get('lnc_judgement_button_path')
 
 
 def identify_trial_pictures(prob_dist, majority_cat, total_samples):
@@ -47,16 +50,16 @@ def get_picture_from_list(picture_list, num_of_pics):
 
 
 def start_screen(win, cat_type, reward_type, wait=None):
-    ready_screen = visual.TextStim(win, text=u"Ready?", pos=(0, 0), bold=True)
+    # ready_screen = visual.TextStim(win, text=u"Ready?", pos=(0, 0), bold=True)
     if reward_type >= 5:
-        reward = visual.TextStim(win, text=u"$5", pos=(0, -0.2), bold=True)
+        reward = visual.TextStim(win, text=u"$5", color='green', pos=(0, -0.2), bold=True, height=0.40)
     else:
-        reward = visual.TextStim(win, text=u"$1", pos=(0, -0.2), bold=True)
+        reward = visual.TextStim(win, text=u"$1", color='green', pos=(0, -0.2), bold=True, height=0.40)
     if cat_type == 'ioc':
-        cat = visual.TextStim(win, text=u"indoor v. outdoor", pos=(0, 0.2), bold=True)
+        cat = visual.TextStim(win, text=u"indoor v. outdoor", pos=(0, 0.25), bold=True)
     else:
-        cat = visual.TextStim(win, text=u"living v. non-living", pos=(0, 0.2), bold=True)
-    sample_screen(win, [ready_screen, reward, cat], wait)
+        cat = visual.TextStim(win, text=u"living v. non-living", pos=(0, 0.25), bold=True)
+    sample_screen(win, [reward, cat], wait)
 
 
 def button_position():
@@ -140,11 +143,10 @@ def main():
                         color='black', colorSpace='rgb', blendMode='avg', useFBO=True)
 
     # set up directions
-    judge_ioc = visual.ImageStim(win, image=ioc_judgement_button_img, pos=(0, 0))
-    judge_lnc = visual.ImageStim(win, image=lnc_judgement_button_img, pos=(0, 0))
+    judge_button = visual.ImageStim(win, image=judgement_button_img, pos=(0, 0), opacity=0.65)
 
-    feedback_positive = visual.TextStim(win, text=u"Successful!", pos=(0, 0), bold=True)
-    feedback_negative = visual.TextStim(win, text=u"Unsuccessful!", pos=(0, 0), bold=True)
+    feedback_positive = visual.TextStim(win, text=u"Correct!", pos=(0, 0), bold=True)
+    feedback_negative = visual.TextStim(win, text=u"Incorrect!", pos=(0, 0), bold=True)
 
     # create fixation cross
     blank_fixation = visual.TextStim(win, text='+', color=u'white')
@@ -193,11 +195,8 @@ def main():
                 visual_select = visual.ImageStim(win, image=sample_pic)
                 sample_clock.reset(0)
                 globalClock.getTime()
-                sample_screen(win, [visual_select, maj_button, min_button], 3)
-                if trial_data.get('category_of_pic') == 'ioc':
-                    sample_screen(win, [visual_select, maj_button, min_button, judge_ioc])
-                else:
-                    sample_screen(win, [visual_select, maj_button, min_button, judge_lnc])
+                sample_screen(win, [visual_select, maj_button, min_button], 2.5)
+                sample_screen(win, [visual_select, maj_button, min_button, judge_button])
                 image_judgement = event.waitKeys(maxWait=5, keyList=['left', 'right'], modifiers=False,
                                                  timeStamped=sample_clock)
                 if image_judgement:
@@ -209,7 +208,6 @@ def main():
                 sample.global_time_of_judgment = globalClock.getTime()
                 trial_object.add_sample(sample)
                 core.wait(0.25)
-                sample_screen(win, [blank_fixation], 1.5)
             else:
                 if 'left' in choice_to_sample[0]:
                     if trial_object.majority_side == 'left':
@@ -230,7 +228,7 @@ def main():
                 break
         for unused_pic in trial_pics[next_unseen_pic:]:
             return_unused_pic(unused_pic)
-        sample_screen(win, [blank_fixation], 1.5)
+        sample_screen(win, [blank_fixation], 2)
         if trial_object.num_of_pics_sampled == 0 or choice_to_sample is None:
             file_writer.write(participant.csv_format() + trial_object.csv_format() + '\n')
         else:
