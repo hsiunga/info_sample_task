@@ -27,9 +27,10 @@ class SamplesInTrial():
         self.global_time_of_judgment = None
 
     def csv_format(self):
-        return '{}, {}, {}, {}, {}, {}, {}'.format(self.sample_no, self.picture_name, self.dec_to_sample_time,
-                                           self.global_picture_onset, self.image_judgement, self.time_of_judge,
-                                           self.global_time_of_judgment)
+        return '{}, {}, {}, {}, {}, {}, {}, {}'.format(self.sample_no, self.picture_path, self.picture_name,
+                                                       self.dec_to_sample_time, self.global_picture_onset,
+                                                       self.image_judgement, self.time_of_judge,
+                                                       self.global_time_of_judgment)
 
 class OverallTrial():
 
@@ -71,6 +72,7 @@ class ConfidenceTrial():
         self.trial_no = trial_no
         self.global_time = global_time
         self.picture_path = picture_path
+        self.old_new = None
         self.status_input = status
         self.confidence_input = confidence
         self.picture_name = self.picture_path.split(os.sep)[-1]
@@ -103,5 +105,5 @@ class ConfidenceTrial():
             self.conf_time = 'No Time'
 
     def csv_format(self):
-        return '{}, {}, {}, {}, {}, {}, {}'.format(self.trial_no, self.global_time, self.picture_name,
+        return '{}, {}, {}, {}, {}, {}, {}, {}'.format(self.trial_no, self.global_time, self.picture_name, self.old_new,
                                                self.status, self.status_time, self.confidence, self.conf_time)

@@ -1,3 +1,10 @@
+#!/usr/bin/env python2
+# psychopy version v1.85.2
+
+# information sampling task using pictures
+
+# created 01/21/2018 by AH & CC lasted edited 02/12/2018 by AH
+
 import os
 from psychopy import visual, data, logging, event, core
 import random
@@ -20,10 +27,6 @@ outdoor_button_img = config.get('outdoor_button_path')
 living_button_img = config.get('living_button_path')
 nonliving_button_img = config.get('nonliving_button_path')
 judgement_button_img = config.get('judgement_button_path')
-
-
-# ioc_judgement_button_img = config.get('ioc_judgement_button_path')
-# lnc_judgement_button_img = config.get('lnc_judgement_button_path')
 
 
 def identify_trial_pictures(prob_dist, majority_cat, total_samples):
@@ -50,7 +53,6 @@ def get_picture_from_list(picture_list, num_of_pics):
 
 
 def start_screen(win, cat_type, reward_type, wait=None):
-    # ready_screen = visual.TextStim(win, text=u"Ready?", pos=(0, 0), bold=True)
     if reward_type >= 5:
         reward = visual.TextStim(win, text=u"$5", color='green', pos=(0, -0.2), bold=True, height=0.40)
     else:
@@ -134,7 +136,7 @@ def main():
     file_writer.write(
         'participant_id, session, trial_no, global_time_onset_trial, category_of_pics, probability, reward_type, '
         'majority_cat, final_choice, final_choice_time, num_of_samples, global_final_choice_time, '
-        'total_trial_time, sample_no, picture_path, dec_to_sample_time, global_picture_onset, '
+        'total_trial_time, sample_no, picture_path, pic_name, dec_to_sample_time, global_picture_onset, '
         'image_judgement, time_of_judge, global_time_of_judge, \n')
 
     # set up display
@@ -152,11 +154,16 @@ def main():
     blank_fixation = visual.TextStim(win, text='+', color=u'white')
 
     # number of trials (must divide by 16 evenly)
-    total_num_trials = 48  # --------TRIAL NUMBER ADJUSTMENTS HERE------------
+    total_num_trials = 6  # --------TRIAL NUMBER ADJUSTMENTS HERE------------
     pic_per_trial = 20
 
     trial_types_idx = [(x % 16) + 1 for x in range(total_num_trials)]
-    random.shuffle(trial_types_idx)
+
+    huffle(trial_types_idx)
+
+    ready_screen = visual.TextStim(win, text=u"Ready?", pos=(0, 0), bold=True)
+    sample_screen(win, [ready_screen])
+    event.waitKeys(maxWait=10, keyList=['space'], modifiers=False)
 
     # start looping through trials
     for no, trial in enumerate(trial_types_idx):
@@ -238,11 +245,5 @@ def main():
     file_writer.close()
 
 
-# def test():
-#     for button in all_buttons:
-#         print(button)
-
-
 if __name__ == '__main__':
     main()
-    # test()
