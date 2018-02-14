@@ -43,3 +43,7 @@ def load_files_by_ext(path, ext):
         if image.endswith(ext):
             ret_list.append(path + os.sep + image)
     return ret_list
+
+
+def sample_list_diff(list_to_sample, list_to_exlude, num_of_samples, replace=True):
+    return list(numpy.random.choice(__list_diff_w_dups(list_to_sample, list_to_exlude), num_of_samples, replace))
