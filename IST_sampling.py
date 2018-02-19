@@ -26,7 +26,7 @@ indoor_button_img = config.get('indoor_button_path')
 outdoor_button_img = config.get('outdoor_button_path')
 living_button_img = config.get('living_button_path')
 nonliving_button_img = config.get('nonliving_button_path')
-judgement_button_img = config.get('judgement_button_path')
+# judgement_button_img = config.get('judgement_button_path')
 
 
 def identify_trial_pictures(prob_dist, majority_cat, total_samples):
@@ -54,13 +54,13 @@ def get_picture_from_list(picture_list, num_of_pics):
 
 def start_screen(win, cat_type, reward_type, wait=None):
     if reward_type >= 5:
-        reward = visual.TextStim(win, text=u"$5", color='green', pos=(0, -0.2), bold=True, height=0.40)
+        reward = visual.TextStim(win, text=u"Correct Answer = $5", color='green', pos=(0, -0.2), bold=True, height=0.15)
     else:
-        reward = visual.TextStim(win, text=u"$1", color='green', pos=(0, -0.2), bold=True, height=0.40)
+        reward = visual.TextStim(win, text=u"Correct Answer = $1", color='green', pos=(0, -0.2), bold=True, height=0.15)
     if cat_type == 'ioc':
-        cat = visual.TextStim(win, text=u"indoor v. outdoor", pos=(0, 0.25), bold=True)
+        cat = visual.TextStim(win, text=u"indoor v. outdoor", pos=(0, 0.25), bold=True, height=0.13)
     else:
-        cat = visual.TextStim(win, text=u"living v. non-living", pos=(0, 0.25), bold=True)
+        cat = visual.TextStim(win, text=u"living v. non-living", pos=(0, 0.25), bold=True, height=0.13)
     sample_screen(win, [reward, cat], wait)
 
 
@@ -145,21 +145,21 @@ def main():
                         color='black', colorSpace='rgb', blendMode='avg', useFBO=True)
 
     # set up directions
-    judge_button = visual.ImageStim(win, image=judgement_button_img, pos=(0, 0), opacity=0.65)
+    # judge_button = visual.ImageStim(win, image=judgement_button_img, pos=(0, 0), opacity=0.65)
 
-    feedback_positive = visual.TextStim(win, text=u"Correct!", pos=(0, 0), bold=True)
-    feedback_negative = visual.TextStim(win, text=u"Incorrect!", pos=(0, 0), bold=True)
+    feedback_positive = visual.TextStim(win, text=u"Correct!", pos=(0, 0), bold=True, height=0.15)
+    feedback_negative = visual.TextStim(win, text=u"Incorrect!", pos=(0, 0), bold=True, height=0.15)
 
     # create fixation cross
     blank_fixation = visual.TextStim(win, text='+', color=u'white')
 
     # number of trials (must divide by 16 evenly)
-    total_num_trials = 6  # --------TRIAL NUMBER ADJUSTMENTS HERE------------
+    total_num_trials = 16  # --------TRIAL NUMBER ADJUSTMENTS HERE------------
     pic_per_trial = 20
 
     trial_types_idx = [(x % 16) + 1 for x in range(total_num_trials)]
 
-    huffle(trial_types_idx)
+    random.shuffle(trial_types_idx)
 
     ready_screen = visual.TextStim(win, text=u"Ready?", pos=(0, 0), bold=True)
     sample_screen(win, [ready_screen])
@@ -176,7 +176,7 @@ def main():
 
         # beginning trial from user's perspective
         trial_clock.reset()
-        start_screen(win, trial_data.get('category_of_pic'), trial_data.get('reward_type'), wait=2.5)
+        start_screen(win, trial_data.get('category_of_pic'), trial_data.get('reward_type'), wait=3)
         sample_button, maj_button, min_button, trial_object.majority_side = create_trial_buttons(win,
                                                                                                  trial_object.majority_cat)
         next_unseen_pic = 0
@@ -189,7 +189,7 @@ def main():
 
             if choice_to_sample is None:
                 feedback = [feedback_negative]
-                sample_screen(win, feedback, 1.5)
+                sample_screen(win, feedback, 2)
                 trial_object.set_final_choice('No Choice')
                 trial_object.final_choice_time = 'No Time'
                 trial_object.global_final_choice_time = globalClock.getTime()
@@ -203,15 +203,15 @@ def main():
                 sample_clock.reset(0)
                 globalClock.getTime()
                 sample_screen(win, [visual_select, maj_button, min_button], 2.5)
-                sample_screen(win, [visual_select, maj_button, min_button, judge_button])
-                image_judgement = event.waitKeys(maxWait=5, keyList=['left', 'right'], modifiers=False,
-                                                 timeStamped=sample_clock)
-                if image_judgement:
-                    sample.image_judgement = image_judgement[0][0]
-                    sample.time_of_judge = image_judgement[0][1]
-                else:
-                    sample.image_judgement = 'No Judgement'
-                    sample.time_of_judge = 'No Time'
+                #sample_screen(win, [visual_select, maj_button, min_button, judge_button])
+                #image_judgement = event.waitKeys(maxWait=5, keyList=['left', 'right'], modifiers=False,
+                #                                 timeStamped=sample_clock)
+                #if image_judgement:
+                #    sample.image_judgement = image_judgement[0][0]
+                #    sample.time_of_judge = image_judgement[0][1]
+                #else:
+                #    sample.image_judgement = 'No Judgement'
+                #    sample.time_of_judge = 'No Time'
                 sample.global_time_of_judgment = globalClock.getTime()
                 trial_object.add_sample(sample)
                 core.wait(0.25)
@@ -226,7 +226,7 @@ def main():
                         feedback = [feedback_positive]
                     else:
                         feedback = [feedback_negative]
-                sample_screen(win, feedback, 1.5)
+                sample_screen(win, feedback, 2)
                 trial_object.set_final_choice(choice_to_sample[0][0])
                 trial_object.final_choice_time = choice_to_sample[0][1]
                 trial_object.global_final_choice_time = globalClock.getTime()

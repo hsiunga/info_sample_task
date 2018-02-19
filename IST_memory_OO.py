@@ -14,7 +14,7 @@ from utils import load_files_by_ext
 config = config_manager.ConfigManager('IST_memory.config')
 
 # input subject's information sampling data and collect old images
-subj_info_sample_data = 'path to info sampling data'
+subj_info_sample_data = '/Users/abbyhsiung/Desktop/Python/log_data/005_01_2018_Feb_16_2116_IST_sampling.csv'
 file_reader = open(subj_info_sample_data, 'r')
 lines = file_reader.readlines()
 
@@ -84,8 +84,6 @@ def main():
 
     for x in range(num_of_images):
         pic = total_images[x]
-
-
         visual_select = visual.ImageStim(win, image=pic)
         visual_select.draw()
         old_new.draw()
