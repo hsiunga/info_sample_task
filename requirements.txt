@@ -22,7 +22,7 @@ moviepy==0.2.3.2
 msgpack-python==0.5.2
 numexpr==2.6.4
 numpy==1.14.0
-opencv-python==3.4.0.12
+opencv-python==4.2.0.32
 openpyxl==2.5.0
 pandas==0.22.0
 Pillow==5.0.0
